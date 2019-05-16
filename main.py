@@ -75,8 +75,8 @@ def AskForinitialData(x):
         for key in user_initialDataForMaintain:
             while True:
                 inputt = input("your " + key + "is : ")
-                if (inputt.isnumeric()):
-                    inputt = float(inputt)
+                if inputt.isnumeric():
+                    inputt = int(inputt)
                     initial[x]["initialData"][key] = inputt
                     break
                 else:
@@ -98,17 +98,17 @@ def AskForinitialData(x):
               (" , ").join(user_initialDataForLose.keys()))
         initial = {x: {"initialData": {}}}
         print(
-            "Input you height in the integer form in cm, and your weight in kg \n")
+            "\nInput height in the integer form in cm, and weight in kg")
 
         for key in user_initialDataForLose:
             while True:
-                inputt = input("your" + key + "is : ")
-                if (inputt.isnumeric()):
+                inputt = input("your " + key + " is : ")
+                try:
                     inputt = float(inputt)
                     initial[x]["initialData"][key] = inputt
                     break
-                else:
-                    print("\nplease try again. Answer in the form of the integers mentioned above.")
+                except ValueError as e:
+                    print("\nplease try again. Answer in the form mentioned above.")
         return initial
 
     elif dataOptions[x]["dataOptions"]["initialWeightGoal"] == "gain":
@@ -129,11 +129,11 @@ def AskForinitialData(x):
         for key in user_initialDataForGain:
             while True:
                 inputt = input("your " + key + " is : ")
-                if (inputt.isnumeric()):
+                try:
                     inputt = float(inputt)
                     initial[x]["initialData"][key] = inputt
                     break
-                else:
+                except ValueError as e:
                     print("\nplease try again. Answer in the form of the integers mentioned above. \n")
         return initial
 
@@ -218,6 +218,7 @@ def TipOfTheDay():
     w=random.choices(tips["TipsOfTheDay"]["essentialOils"])
     print("\nToday's Tip of the day is :", ', '.join(j))
     print("\nand a fact about essential oils is:",', '.join(w))
+    print("Dear user, thank you for using HealthyWeight :) Hope to see you soon!")
 
 
 def NewUser():
@@ -229,6 +230,7 @@ def NewUser():
     CalculatingBMI(username)
     CalculatingBMR(username)
     TipOfTheDay()
+
 
 def Save_New_Data(New_Weight, name):
     with open("users.json") as a:
@@ -250,6 +252,7 @@ def Create_New_Username():
             break
         else:
             print("\nplease answer in yes or no form.")
+
 def CheckIfGoalisReached(New_Weight, name , Old_Weight):
     difference = New_Weight - Old_Weight
     with open("users.json") as a:
@@ -260,14 +263,12 @@ def CheckIfGoalisReached(New_Weight, name , Old_Weight):
         if difference >0  and Goal =="gain":
             print("\nDear user, you have gained : " , difference, "Kgs since we last saw you !\nYou're on the right track as your goal was to ", Goal, "your weight :) Keep on going :)")
         if difference <0 and (Goal =="maintain" or Goal=="gain"):
-            print("\nDear user, you have lost: ", difference,
+            print("\nDear user, you have lost: ", abs(difference),
                   "Kgs since we last saw you. You have to work harder to reach your goal\nwhich was to gain weight.\nWork harder you'll reach there")
         if difference <0 and Goal =="lose":
-            print("\nDear user, you have lost : ", difference,
+            print("\nDear user, you have lost : ", abs(difference),
                   "Kgs since we last saw you !\nYou're on the right track as your goal was to lose"
                   "weight :) Keep on going :)")
-
-
 
 def Load_Old_Data(name):
     with open("users.json") as a:
@@ -294,6 +295,19 @@ def Load_Old_Data(name):
                 break
             else:
                 print("\nPlease try it again and answer in the form of yes or no :)")
+def UsernameisNone():
+    while True:
+        end = input("\nSory this username doesn't exist. Type 0 to end the Application\nType 1 to create a new username.")
+        if end.isnumeric():
+            end=int(end)
+            if end==0:
+                print("\nDear user, thank you for using HealthyWeight :) Hope to see you soon!")
+                break
+            elif end==1:
+                NewUser()
+                break
+        else:
+            print("please input an INTEGER.")
 
 def OldUser():
         a = os.listdir()
@@ -303,14 +317,13 @@ def OldUser():
                 while True:
                     name = input("\nplease type your previously created username : ")
                     if user.get(name) is None:
-                        end = input("\nDear user this username doesn't exist :(. Try again. Type 0 to end the Application. and any other input to continue.")
-                        if end == 0:
-                            break
+                        UsernameisNone()
                     else:
                         Load_Old_Data(name)
                         break
         else:
             Create_New_Username()
+
 def Check():
     print("\nThis Application helps you reach your weight goal. :)")
     while True:
